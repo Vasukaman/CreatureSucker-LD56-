@@ -20,8 +20,10 @@ public class VacuumCleaner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0)) // Left mouse button
+       
+        if (true)//Input.GetMouseButton(0)) // Left mouse button
         {
+            Debug.Log("LMB");
             SuckIn();
         }
     }
@@ -29,6 +31,7 @@ public class VacuumCleaner : MonoBehaviour
     private void SuckIn()
     {
         iSuckable[] suckablesInZone = FindAllSuckablesInZone();
+        Debug.Log(suckablesInZone.Length);
         SuckCreatures(suckablesInZone);
     }
 
@@ -57,6 +60,8 @@ public class VacuumCleaner : MonoBehaviour
 
             if (rb != null)
             {
+                Debug.Log("SUCK");
+                suckable.OnSuck();
                 ApplySuctionForce(rb);
             }
 

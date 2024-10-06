@@ -27,6 +27,6 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     public void OnSuck()
     {
-
+        _navAgent.enabled = false;
     }
 }
