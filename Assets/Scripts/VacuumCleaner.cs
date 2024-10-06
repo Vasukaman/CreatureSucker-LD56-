@@ -7,6 +7,7 @@ public class VacuumCleaner : MonoBehaviour
     public float suctionForce = 3f;
     public LayerMask creatureLayer;
 
+    [SerializeField]
     private List<GameObject> suckedCreatures = new List<GameObject>();
 
     [SerializeField]
@@ -23,7 +24,6 @@ public class VacuumCleaner : MonoBehaviour
 
     void Update()
     {
-       
         if (Input.GetMouseButton(0)) // Left mouse button
         {
             Debug.Log("LMB");
@@ -34,7 +34,7 @@ public class VacuumCleaner : MonoBehaviour
     private void SuckIn()
     {
         iSuckable[] suckablesInZone = FindAllSuckablesInZone();
-        Debug.Log(suckablesInZone.Length);
+        Debug.Log($"Found {suckablesInZone.Length} suckable creatures.");
         SuckCreatures(suckablesInZone);
     }
 
@@ -63,15 +63,18 @@ public class VacuumCleaner : MonoBehaviour
 
             if (rb != null)
             {
-                Debug.Log("SUCK");
+                Debug.Log("Sucking in creature: " + creature.name);
                 suckable.OnSuck();
                 ApplySuctionForce(rb);
             }
 
-            if (Vector3.Distance(_suckInPoint.transform.position, creature.transform.position) < _distanceToStore)
+            float distance = Vector3.Distance(_suckInPoint.position, creature.transform.position);
+            Debug.Log($"Distance to suck-in point: {distance}");
+
+            if (distance < _distanceToStore)
             {
                 StoreCreature(creature);
-                suckable.OnSuck();
+                Debug.Log("Within range for storing: " + creature.name);
             }
         }
     }
@@ -88,6 +91,11 @@ public class VacuumCleaner : MonoBehaviour
         {
             suckedCreatures.Add(creature);
             creature.SetActive(false);
+            Debug.Log("Creature stored: " + creature.name);
+        }
+        else
+        {
+            Debug.Log("Creature already stored: " + creature.name);
         }
     }
 
