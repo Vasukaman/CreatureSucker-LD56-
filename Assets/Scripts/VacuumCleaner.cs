@@ -13,6 +13,9 @@ public class VacuumCleaner : MonoBehaviour
     private Transform _suckZoneCentre;
 
     [SerializeField]
+    private Transform _suckInPoint;
+
+    [SerializeField]
     private float _suckZoneRadius;
 
     [SerializeField]
@@ -65,7 +68,7 @@ public class VacuumCleaner : MonoBehaviour
                 ApplySuctionForce(rb);
             }
 
-            if (Vector3.Distance(_suckZoneCentre.transform.position, creature.transform.position) < _distanceToStore)
+            if (Vector3.Distance(_suckInPoint.transform.position, creature.transform.position) < _distanceToStore)
             {
                 StoreCreature(creature);
                 suckable.OnSuck();
@@ -75,7 +78,7 @@ public class VacuumCleaner : MonoBehaviour
 
     private void ApplySuctionForce(Rigidbody rb)
     {
-        Vector3 direction = (_suckZoneCentre.position - rb.position).normalized;
+        Vector3 direction = (_suckInPoint.position - rb.position).normalized;
         rb.AddForce(direction * suctionForce);
     }
 
