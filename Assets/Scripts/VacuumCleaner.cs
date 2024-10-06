@@ -21,7 +21,7 @@ public class VacuumCleaner : MonoBehaviour
     void Update()
     {
        
-        if (true)//Input.GetMouseButton(0)) // Left mouse button
+        if (Input.GetMouseButton(0)) // Left mouse button
         {
             Debug.Log("LMB");
             SuckIn();
@@ -65,7 +65,7 @@ public class VacuumCleaner : MonoBehaviour
                 ApplySuctionForce(rb);
             }
 
-            if (Vector3.Distance(transform.position, creature.transform.position) < _distanceToStore)
+            if (Vector3.Distance(_suckZoneCentre.transform.position, creature.transform.position) < _distanceToStore)
             {
                 StoreCreature(creature);
                 suckable.OnSuck();
