@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class VacuumCleaner : MonoBehaviour
@@ -8,7 +7,6 @@ public class VacuumCleaner : MonoBehaviour
     public float suctionForce = 3f;
     public LayerMask creatureLayer;
 
-    // List to store sucked creatures
     private List<GameObject> suckedCreatures = new List<GameObject>();
 
     [SerializeField]
@@ -17,47 +15,63 @@ public class VacuumCleaner : MonoBehaviour
     [SerializeField]
     private float _suckZoneRadius;
 
+    [SerializeField]
+    private float _distanceToStore;
+
     void Update()
     {
-        // Call functions from here
+        if (Input.GetMouseButton(0)) // Left mouse button
+        {
+            SuckIn();
+        }
+    }
+
+    private void SuckIn()
+    {
         iSuckable[] suckablesInZone = FindAllSuckablesInZone();
         SuckCreatures(suckablesInZone);
     }
 
     iSuckable[] FindAllSuckablesInZone()
     {
-        Collider[] _hitColliders = Physics.OverlapSphere(_suckZoneCentre.position, _suckZoneRadius, creatureLayer);
+        Collider[] hitColliders = Physics.OverlapSphere(_suckZoneCentre.position, _suckZoneRadius, creatureLayer);
         List<iSuckable> suckables = new List<iSuckable>();
 
-        foreach (Collider col in _hitColliders)
+        foreach (Collider col in hitColliders)
         {
-            iSuckable iSucker = col.gameObject.GetComponent<iSuckable>();
-            if (iSucker != null)
+            iSuckable suckable = col.GetComponent<iSuckable>();
+            if (suckable != null)
             {
-                Debug.Log("Sucker found");
-                suckables.Add(iSucker); // Add the suckable to the list
+                suckables.Add(suckable);
             }
         }
-
-        return suckables.ToArray(); // Return as an array
+        return suckables.ToArray();
     }
 
     private void SuckCreatures(iSuckable[] suckablesInZone)
     {
         foreach (iSuckable suckable in suckablesInZone)
         {
-            GameObject creature = (suckable as MonoBehaviour).gameObject; // Cast to MonoBehaviour to access the GameObject
+            GameObject creature = (suckable as MonoBehaviour).gameObject;
+            Rigidbody rb = creature.GetComponent<Rigidbody>();
 
-            // Suck the creature in
-            Vector3 direction = (transform.position - creature.transform.position).normalized;
-            creature.GetComponent<Rigidbody>().AddForce(direction * suctionForce);
+            if (rb != null)
+            {
+                ApplySuctionForce(rb);
+            }
 
-            if (Vector3.Distance(transform.position, creature.transform.position) < 1f)
+            if (Vector3.Distance(transform.position, creature.transform.position) < _distanceToStore)
             {
                 StoreCreature(creature);
                 suckable.OnSuck();
             }
         }
+    }
+
+    private void ApplySuctionForce(Rigidbody rb)
+    {
+        Vector3 direction = (_suckZoneCentre.position - rb.position).normalized;
+        rb.AddForce(direction * suctionForce);
     }
 
     private void StoreCreature(GameObject creature)
@@ -72,5 +86,11 @@ public class VacuumCleaner : MonoBehaviour
     public List<GameObject> GetStoredCreatures()
     {
         return suckedCreatures;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_suckZoneCentre.position, _suckZoneRadius);
     }
 }
