@@ -19,6 +19,10 @@ public class CreatureResizerOnSucked : MonoBehaviour
         {
             SetTargetScale();
         }
+        else
+        {
+            targetScale = Vector3.one;
+        }
 
         SmoothlyTransitionToTargetScale();
     }

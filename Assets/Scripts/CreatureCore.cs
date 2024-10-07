@@ -16,12 +16,14 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     [SerializeField] float walkingSpeed = 5;
     [SerializeField] float runningSpeed = 7.5f;
-
+    [SerializeField] private float onSuckREstartTimer = 0;
 
     [SerializeField] private PlayerDataSO _playerDataSO;
 
 
     [SerializeField] private Animation _animation;
+
+    
 
     // NavMeshAgent for movement
     private NavMeshAgent navMeshAgent;
@@ -66,6 +68,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
         HandleBehaviorLockCountdown();                // Countdown for behavior lock
         EvaluateSurroundings();                      // Check player proximity and nearby creatures
         HandleStateTransitions();                    // Manage state transitions based on conditions
+        HandleSuckTimer();
         ExecuteState();
      
     }
@@ -362,8 +365,26 @@ public class CreatureCore : MonoBehaviour, iSuckable
     }
 
 
+    private void HandleSuckTimer()
+    {
 
-    private bool isBeingSucked = false;
+        if (!isBeingSucked) return;
+
+        onSuckREstartTimer-=Time.deltaTime;
+
+        if (onSuckREstartTimer < 0)
+        {
+            isBeingSucked = false;
+            navMeshAgent.enabled = true;
+        }
+    }
+
+    private void RestartSuckTiemr()
+    {
+        onSuckREstartTimer = 2;
+    }
+
+ [SerializeField]   private bool isBeingSucked = false;
     public bool GetIsBeingSucked()
     {
         return isBeingSucked;
@@ -379,5 +400,8 @@ public class CreatureCore : MonoBehaviour, iSuckable
     {
         navMeshAgent.enabled = false;
         isBeingSucked = true;
+        RestartSuckTiemr();
     }
+
+
 }
