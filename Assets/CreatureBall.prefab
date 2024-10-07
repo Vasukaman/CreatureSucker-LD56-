@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5114737750263945059}
   - component: {fileID: 5114737750263945070}
   - component: {fileID: 5114737750263945069}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: annoying guy model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 5114737751884737180}
   - component: {fileID: 5114737751884737183}
   - component: {fileID: 5114737751884737182}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: s (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 5114737752161907744}
   - component: {fileID: 5114737752161907747}
   - component: {fileID: 5114737752161907746}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: s
   m_TagString: Untagged
   m_Icon: {fileID: 0}
