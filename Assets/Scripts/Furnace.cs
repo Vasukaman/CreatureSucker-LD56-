@@ -78,6 +78,11 @@ public class Furnace : MonoBehaviour
     public void SellCreatures()
     {
         int soldCount = storedCreatures.Count; // Get the number of creatures to sell
+
+        foreach (GameObject creature in storedCreatures)
+        {
+            Destroy(creature);
+        }
         storedCreatures.Clear(); // Clear the stored creatures
         Debug.Log($"Sold {soldCount} creatures!");
     }
