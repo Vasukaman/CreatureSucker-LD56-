@@ -8,25 +8,28 @@ public class VacuumCleaner : MonoBehaviour
     public LayerMask creatureLayer;
 
     [SerializeField]
-    private List<GameObject> suckedCreatures = new List<GameObject>();
+    private List<GameObject> suckedCreatures = new List<GameObject>(); // Added list to store sucked creatures
 
     [SerializeField]
     private Transform _suckZoneCentre;
-
     [SerializeField]
     private Transform _suckInPoint;
-
     [SerializeField]
     private float _suckZoneRadius;
-
     [SerializeField]
     private float _distanceToStore;
 
+    private StorageCapacityManager storageManager;
+
+    void Start()
+    {
+        storageManager = FindObjectOfType<StorageCapacityManager>();
+    }
+
     void Update()
     {
-        if (Input.GetMouseButton(0)) // Left mouse button
+        if (Input.GetMouseButton(0))
         {
-            Debug.Log("LMB");
             SuckIn();
         }
     }
@@ -34,7 +37,6 @@ public class VacuumCleaner : MonoBehaviour
     private void SuckIn()
     {
         iSuckable[] suckablesInZone = FindAllSuckablesInZone();
-        Debug.Log($"Found {suckablesInZone.Length} suckable creatures.");
         SuckCreatures(suckablesInZone);
     }
 
@@ -63,18 +65,15 @@ public class VacuumCleaner : MonoBehaviour
 
             if (rb != null)
             {
-                Debug.Log("Sucking in creature: " + creature.name);
                 suckable.OnSuck();
                 ApplySuctionForce(rb);
             }
 
             float distance = Vector3.Distance(_suckInPoint.position, creature.transform.position);
-            Debug.Log($"Distance to suck-in point: {distance}");
 
-            if (distance < _distanceToStore)
+            if (distance < _distanceToStore && storageManager.CanStoreInVacuum())
             {
                 StoreCreature(creature);
-                Debug.Log("Within range for storing: " + creature.name);
             }
         }
     }
@@ -89,20 +88,25 @@ public class VacuumCleaner : MonoBehaviour
     {
         if (!suckedCreatures.Contains(creature))
         {
+            storageManager.StoreInVacuum(creature);
             suckedCreatures.Add(creature);
             creature.GetComponent<CreatureCore>().StoreCreature();
             creature.SetActive(false);
-            Debug.Log("Creature stored: " + creature.name);
-        }
-        else
-        {
-            Debug.Log("Creature already stored: " + creature.name);
         }
     }
 
+    public void RemoveCreature(GameObject creature)
+    {
+        if (suckedCreatures.Contains(creature))
+        {
+            suckedCreatures.Remove(creature);
+        }
+    }
+
+
     public List<GameObject> GetStoredCreatures()
     {
-        return suckedCreatures;
+        return new List<GameObject>(suckedCreatures); // Ensure we return a copy of the list
     }
 
     private void OnDrawGizmos()
