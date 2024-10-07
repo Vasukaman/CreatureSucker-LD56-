@@ -25,6 +25,14 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     [SerializeField] private bool isStored = false;
 
+
+    [SerializeField] private AudioSource _audioSource;
+
+    [SerializeField] private AudioClip[] _regularSounds;
+    [SerializeField] private AudioClip[] _tauntSounds;
+    [SerializeField] private AudioClip[] _scaredSounds;
+
+
     // NavMeshAgent for movement
     private NavMeshAgent navMeshAgent;
 
@@ -109,9 +117,13 @@ public class CreatureCore : MonoBehaviour, iSuckable
     }
     private void Idle()
     {
+
         if (!behaviorStarted)
         { SetBehaviorLock(Random.Range(0.5f, 10f)); }
         // Check if the creature should stand still or choose a new point to wander to
+
+        TryRegularSound();
+
         if (ShouldWander())
         {
             // Transition back to Wander state
@@ -145,7 +157,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
     private void HandleStateTransitions()
     {
         // Check for priority states first
-        if (IsPlayerNearby() && !behaviorLocked)
+        if (IsPlayerNearby())// && (!behaviorLocked|| behaviorLockedTime<0.5f))
         {
             ChangeState(State.RunAway);             // Switch to RunAway state immediately
             return;
@@ -209,6 +221,8 @@ public class CreatureCore : MonoBehaviour, iSuckable
             
         }
 
+        TryRegularSound();
+
         navMeshAgent.speed = walkingSpeed;
         // Check if the creature is currently moving
         if (!navMeshAgent.hasPath || navMeshAgent.remainingDistance <= _distanceToStop)
@@ -227,6 +241,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
     {
 
         if (behaviorStarted) return;
+        TryScaredSound();
         navMeshAgent.speed = runningSpeed;
             SelectRandomScatterPoint();
 
@@ -403,9 +418,22 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     public void OnSuck()
     {
-        navMeshAgent.enabled = false;
-        isBeingSucked = true;
+        StartBeingSucked();
         RestartSuckTiemr();
+    }
+
+    private void StartBeingSucked()
+    {
+        if (!isBeingSucked)
+        {
+            isBeingSucked = true;
+            TryScaredSound();
+        }
+
+        if (!navMeshAgent.enabled)
+        {
+            navMeshAgent.enabled = true;
+        }
     }
 
 
@@ -414,5 +442,47 @@ public class CreatureCore : MonoBehaviour, iSuckable
         isStored = true;
     }
 
+    private bool ShouldPlayRegularSound()
+    {
+        return Random.Range(0, 20000) < 2;
+    }
+
+    private void PlayRegularSound()
+    {
+        _audioSource.clip = _regularSounds[Random.Range(0, _regularSounds.Length - 1)];
+        _audioSource.Play();
+    }
+
+    private void PlayTauntSound()
+    {
+        _audioSource.clip = _tauntSounds[Random.Range(0, _regularSounds.Length - 1)];
+        _audioSource.Play();
+    }
+
+    private void TryRegularSound()
+    {
+        if (ShouldPlayRegularSound())
+            PlayRegularSound();
+        
+    }
+
+
+    private bool ShouldPlayScaredSound()
+    {
+        return Random.Range(0, 100) < 20;
+    }
+
+    private void PlayScaredSound()
+    {
+        _audioSource.clip = _scaredSounds[Random.Range(0, _scaredSounds.Length - 1)];
+        _audioSource.Play();
+    }
+
+    private void TryScaredSound()
+    {
+        if (ShouldPlayScaredSound())
+            PlayScaredSound();
+
+    }
 
 }
