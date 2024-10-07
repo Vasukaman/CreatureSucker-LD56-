@@ -90,6 +90,7 @@ public class VacuumCleaner : MonoBehaviour
         if (!suckedCreatures.Contains(creature))
         {
             suckedCreatures.Add(creature);
+            creature.GetComponent<CreatureCore>().StoreCreature();
             creature.SetActive(false);
             Debug.Log("Creature stored: " + creature.name);
         }

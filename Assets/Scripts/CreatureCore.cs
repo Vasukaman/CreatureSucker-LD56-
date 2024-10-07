@@ -23,7 +23,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     [SerializeField] private Animation _animation;
 
-    
+    [SerializeField] private bool isStored = false;
 
     // NavMeshAgent for movement
     private NavMeshAgent navMeshAgent;
@@ -54,6 +54,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
         }
     }
 
+  
     void Start()
     {
         _animation["walking_ag"].time = Random.Range(0,10);
@@ -367,14 +368,18 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     private void HandleSuckTimer()
     {
-
-        if (!isBeingSucked) return;
+        if (isStored) return;
+        if (!isBeingSucked && navMeshAgent.enabled) return;
 
         onSuckREstartTimer-=Time.deltaTime;
 
+
+        if (onSuckREstartTimer < 1.5)
+            isBeingSucked = false;
+
         if (onSuckREstartTimer < 0)
         {
-            isBeingSucked = false;
+         
             navMeshAgent.enabled = true;
         }
     }
@@ -387,7 +392,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
  [SerializeField]   private bool isBeingSucked = false;
     public bool GetIsBeingSucked()
     {
-        return isBeingSucked;
+        return isBeingSucked && !isStored;
     }
 
     public float GetDistanceFromTheZone()
@@ -401,6 +406,12 @@ public class CreatureCore : MonoBehaviour, iSuckable
         navMeshAgent.enabled = false;
         isBeingSucked = true;
         RestartSuckTiemr();
+    }
+
+
+    public void StoreCreature()
+    {
+        isStored = true;
     }
 
 
