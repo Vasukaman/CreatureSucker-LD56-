@@ -59,7 +59,7 @@ public class Furnace : MonoBehaviour
             }
 
             // Create a new creature ball prefab instead of using the original creature
-            GameObject creatureBall = Instantiate(_creatureBallPrefab, _transferPointPosition.position, Quaternion.identity);
+            GameObject creatureBall = Instantiate(_creatureBallPrefab, _transferPointPosition.position+Vector3.one*Random.Range(-1f,1f)*0.25f, Quaternion.identity);
             storedCreatures.Add(creatureBall); // Add the creature ball to the stored list
 
             // Optionally, you can deactivate the original creature if you still want to keep it in the scene

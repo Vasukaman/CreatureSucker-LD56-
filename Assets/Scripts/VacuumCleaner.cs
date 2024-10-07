@@ -18,7 +18,7 @@ public class VacuumCleaner : MonoBehaviour
     private float _suckZoneRadius;
     [SerializeField]
     private float _distanceToStore;
-
+    [SerializeField]
     private StorageCapacityManager storageManager;
 
     void Start()
@@ -71,7 +71,7 @@ public class VacuumCleaner : MonoBehaviour
 
             float distance = Vector3.Distance(_suckInPoint.position, creature.transform.position);
 
-            if (distance < _distanceToStore && storageManager.CanStoreInVacuum())
+            if (distance < _distanceToStore && storageManager.CanStoreInVacuum(suckedCreatures.Count))
             {
                 StoreCreature(creature);
             }
@@ -88,7 +88,7 @@ public class VacuumCleaner : MonoBehaviour
     {
         if (!suckedCreatures.Contains(creature))
         {
-            storageManager.StoreInVacuum(creature);
+           //storageManager.StoreInVacuum(creature);
             suckedCreatures.Add(creature);
             creature.GetComponent<CreatureCore>().StoreCreature();
             creature.SetActive(false);

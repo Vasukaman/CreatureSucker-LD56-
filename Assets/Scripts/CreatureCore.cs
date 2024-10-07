@@ -444,7 +444,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     private bool ShouldPlayRegularSound()
     {
-        return Random.Range(0, 10000) < 2;
+        return Random.Range(0, 20000) < 2;
     }
 
     private void PlayRegularSound()
@@ -469,7 +469,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
 
     private bool ShouldPlayScaredSound()
     {
-        return Random.Range(0, 100) < 50;
+        return Random.Range(0, 100) < 20;
     }
 
     private void PlayScaredSound()
