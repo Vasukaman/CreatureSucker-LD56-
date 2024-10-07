@@ -9121,6 +9121,8 @@ MonoBehaviour:
   transferSpeed: 0.5
   _transferPointPosition: {fileID: 607259413}
   creatureCountText: {fileID: 1594046860}
+  _creatureBallPrefab: {fileID: 5114737751484432621, guid: 73111449d7d37ab42b899236a08c84f1,
+    type: 3}
 --- !u!65 &1477599211
 BoxCollider:
   m_ObjectHideFlags: 0

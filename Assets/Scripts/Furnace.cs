@@ -15,6 +15,8 @@ public class Furnace : MonoBehaviour
     [SerializeField]
     private TMP_Text creatureCountText; // Reference to the TextMeshPro text component
 
+    [SerializeField]
+    private GameObject _creatureBallPrefab;
     private bool playerInRange = false; // Track if the player/vacuum is within range
     private bool isTransferring = false; // Track if creatures are currently being transferred
 
@@ -49,9 +51,10 @@ public class Furnace : MonoBehaviour
 
         while (creaturesToTransfer.Count > 0 && Input.GetMouseButton(1)) // Continue while RMB is held down
         {
-            GameObject creature = creaturesToTransfer[0];
+            GameObject creature = GameObject.Instantiate(_creatureBallPrefab);//creaturesToTransfer[0];
             creaturesToTransfer.RemoveAt(0);
             storedCreatures.Add(creature);
+           
 
             // Reactivate and move the creature to the transfer point position
             creature.SetActive(true);
