@@ -71,6 +71,15 @@ public class Furnace : MonoBehaviour
         isTransferring = false; // Reset transferring state
     }
 
+    // Selling Creatures
+    public void SellCreatures()
+    {
+        int soldCount = storedCreatures.Count; // Get the number of creatures to sell
+        storedCreatures.Clear(); // Clear the stored creatures
+        Debug.Log($"Sold {soldCount} creatures!");
+    }
+
+
     // Update the UI text to show the number of creatures caught
     private void UpdateCreatureCountText()
     {
