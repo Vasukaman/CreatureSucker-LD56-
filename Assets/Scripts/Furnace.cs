@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro; // Include TextMeshPro namespace
 
 public class Furnace : MonoBehaviour
 {
@@ -9,7 +10,10 @@ public class Furnace : MonoBehaviour
     private float transferSpeed = 0.5f; // Time delay between each creature transfer
 
     [SerializeField]
-    Transform _transferPointPosition;
+    private Transform _transferPointPosition; // Point where creatures are transferred to
+
+    [SerializeField]
+    private TMP_Text creatureCountText; // Reference to the TextMeshPro text component
 
     private bool playerInRange = false; // Track if the player/vacuum is within range
     private bool isTransferring = false; // Track if creatures are currently being transferred
@@ -49,15 +53,12 @@ public class Furnace : MonoBehaviour
             creaturesToTransfer.RemoveAt(0);
             storedCreatures.Add(creature);
 
-            // Reactivate and move the creature to the Furnace position
+            // Reactivate and move the creature to the transfer point position
             creature.SetActive(true);
-            creature.transform.position = _transferPointPosition.position; // Snap to the Furnace position
+            creature.transform.position = _transferPointPosition.position; // Snap to the transfer point
 
-            // Prevent the creature from leaving the furnace area
-            //creature.AddComponent<StayInFurnace>().SetFurnaceTrigger(GetComponent<Collider>());
-
-
-
+            // Update the creature count display
+            UpdateCreatureCountText();
 
             Debug.Log("Transferred creature: " + creature.name);
             Debug.Log("Creatures remaining in Vacuum: " + creaturesToTransfer.Count);
@@ -68,6 +69,15 @@ public class Furnace : MonoBehaviour
 
         Debug.Log("Transfer complete.");
         isTransferring = false; // Reset transferring state
+    }
+
+    // Update the UI text to show the number of creatures caught
+    private void UpdateCreatureCountText()
+    {
+        if (creatureCountText != null)
+        {
+            creatureCountText.text = "Creatures Caught: " + storedCreatures.Count;
+        }
     }
 
     // Detect when the player enters the Furnace area
