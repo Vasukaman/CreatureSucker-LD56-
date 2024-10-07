@@ -106,7 +106,7 @@ public class CreatureCore : MonoBehaviour, iSuckable
     private void Idle()
     {
         if (!behaviorStarted)
-        { SetBehaviorLock(Random.Range(0.5f, 5f)); }
+        { SetBehaviorLock(Random.Range(0.5f, 10f)); }
         // Check if the creature should stand still or choose a new point to wander to
         if (ShouldWander())
         {

@@ -8,6 +8,9 @@ public class Furnace : MonoBehaviour
     [SerializeField]
     private float transferSpeed = 0.5f; // Time delay between each creature transfer
 
+    [SerializeField]
+    Transform _transferPointPosition;
+
     private bool playerInRange = false; // Track if the player/vacuum is within range
     private bool isTransferring = false; // Track if creatures are currently being transferred
 
@@ -48,10 +51,13 @@ public class Furnace : MonoBehaviour
 
             // Reactivate and move the creature to the Furnace position
             creature.SetActive(true);
-            creature.transform.position = transform.position; // Snap to the Furnace position
+            creature.transform.position = _transferPointPosition.position; // Snap to the Furnace position
 
             // Prevent the creature from leaving the furnace area
-            creature.AddComponent<StayInFurnace>().SetFurnaceTrigger(GetComponent<Collider>());
+            //creature.AddComponent<StayInFurnace>().SetFurnaceTrigger(GetComponent<Collider>());
+
+
+
 
             Debug.Log("Transferred creature: " + creature.name);
             Debug.Log("Creatures remaining in Vacuum: " + creaturesToTransfer.Count);
